@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SYSTEM_OWNER
+  BUSINESS_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum BusinessStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ServiceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum StaffStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum AppointmentStatus {
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Business {
+  id           String         @id @default(cuid())
+  name         String
+  slug         String         @unique
+  contactEmail String
+  contactPhone String?
+  timezone     String
+  status       BusinessStatus @default(ACTIVE)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  users             User[]
+  services          Service[]
+  staff             Staff[]
+  availabilityRules AvailabilityRule[]
+  appointments      Appointment[]
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  role         UserRole
+  status       UserStatus @default(ACTIVE)
+  businessId   String?
+  business     Business?  @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([businessId])
+}
+
+model Service {
+  id              String        @id @default(cuid())
+  businessId      String
+  business        Business      @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  name            String
+  durationMinutes Int
+  description     String?
+  status          ServiceStatus @default(ACTIVE)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  appointments    Appointment[]
+
+  @@index([businessId])
+}
+
+model Staff {
+  id                String             @id @default(cuid())
+  businessId        String
+  business          Business           @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  name              String
+  email             String?
+  status            StaffStatus        @default(ACTIVE)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  availabilityRules AvailabilityRule[]
+  appointments      Appointment[]
+
+  @@index([businessId])
+}
+
+// Weekly hours. dayOfWeek uses JS getDay(): 0 = Sunday … 6 = Saturday.
+// Null staffId means the hours apply to every staff member in the business.
+model AvailabilityRule {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  staffId    String?
+  staff      Staff?   @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  dayOfWeek  Int
+  startTime  String
+  endTime    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([staffId])
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  businessId    String
+  business      Business          @relation(fields: [businessId], references: [id], onDelete: Restrict)
+  serviceId     String
+  service       Service           @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  staffId       String
+  staff         Staff             @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  customerName  String
+  customerEmail String
+  customerPhone String?
+  startAt       DateTime
+  endAt         DateTime
+  status        AppointmentStatus @default(CONFIRMED)
+  manageToken   String            @unique
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([businessId])
+  @@index([staffId, startAt])
+  @@index([status])
+}
