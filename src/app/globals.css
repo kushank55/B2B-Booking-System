@@ -217,3 +217,73 @@ select {
 .content .card {
   margin-bottom: 16px;
 }
+
+.hours-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 120px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.hours-day {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hours-day input {
+  width: auto;
+}
+
+.hours-scope,
+.hours-preview {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 720px) {
+  .hours-scope,
+  .hours-preview {
+    grid-template-columns: auto 1fr auto auto;
+    align-items: end;
+  }
+
+  .hours-scope button,
+  .hours-preview button {
+    margin-top: 0;
+  }
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slot {
+  margin-top: 0;
+  background: white;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.slot-selected {
+  background: var(--accent);
+  color: white;
+}
+
+.badge-confirmed {
+  background: #dceee3;
+  color: #1f4d3a;
+}
+
+.badge-cancelled {
+  background: #f3d6d6;
+  color: #9b2c2c;
+}
+
+.badge-completed {
+  background: #ddd4c6;
+  color: #1c1916;
+}

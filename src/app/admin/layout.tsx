@@ -26,6 +26,7 @@ export default async function AdminLayout({
           <Link href="/admin">Profile</Link>
           <Link href="/admin/services">Services</Link>
           <Link href="/admin/staff">Staff</Link>
+          <Link href="/admin/hours">Hours</Link>
         </div>
         <div className="topbar-meta">
           <span className="muted">{result.user.email}</span>

@@ -4,6 +4,7 @@ import { requireAdmin } from "@/server/auth/guards";
 import { updateOwnProfile } from "@/server/admin/profile";
 import { createService, updateService } from "@/server/admin/services";
 import { createStaff, updateStaff } from "@/server/admin/staff";
+import { replaceAvailability } from "@/server/bookings/availability";
 import { redirect } from "next/navigation";
 
 export type FormState = { error: string } | undefined;
@@ -89,4 +90,36 @@ export async function saveStaff(
   }
 
   redirect("/admin/staff");
+}
+
+export async function saveHours(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const admin = await requireAdmin();
+  if (!admin.ok) {
+    return { error: "You must be signed in as a Business Admin." };
+  }
+
+  const staffId = String(formData.get("staffId") ?? "") || null;
+  const days = [0, 1, 2, 3, 4, 5, 6].flatMap((dayOfWeek) => {
+    const open = formData.get(`open-${dayOfWeek}`) === "on";
+    if (!open) {
+      return [];
+    }
+    return [
+      {
+        dayOfWeek,
+        startTime: String(formData.get(`start-${dayOfWeek}`) ?? "").slice(0, 5),
+        endTime: String(formData.get(`end-${dayOfWeek}`) ?? "").slice(0, 5),
+      },
+    ];
+  });
+
+  const saved = await replaceAvailability(admin.businessId, staffId, days);
+  if (saved.error) {
+    return { error: saved.error };
+  }
+
+  redirect(staffId ? `/admin/hours?staffId=${staffId}` : "/admin/hours");
 }

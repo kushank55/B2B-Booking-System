@@ -15,6 +15,9 @@ export default async function AdminPage() {
         These details belong to /{result.business.slug}. Status is controlled by
         the System Owner.
       </p>
+      <p>
+        <a href={`/book/${result.business.slug}`}>Public booking page</a>
+      </p>
       <ProfileForm
         business={{
           name: result.business.name,
