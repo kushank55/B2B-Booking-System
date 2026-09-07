@@ -51,14 +51,16 @@ export async function createBooking(input: CreateBookingInput) {
     staffId: input.staffId,
   });
 
-  if ("error" in slots && slots.error) {
-    return { error: slots.error, status: slots.status };
+  if (!("slots" in slots) || !slots.slots) {
+    return {
+      error: "error" in slots ? slots.error : "That time is not available.",
+      status: "status" in slots ? slots.status : 400,
+    };
   }
 
-  const chosen =
-    "slots" in slots
-      ? slots.slots.find((slot) => slot.startAt === startAt.toISOString())
-      : undefined;
+  const chosen = slots.slots.find(
+    (slot) => slot.startAt === startAt.toISOString(),
+  );
 
   if (!chosen) {
     return {

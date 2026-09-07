@@ -108,7 +108,7 @@ export default async function HoursPage({
           <p className="error">{preview.error}</p>
         ) : null}
 
-        {preview && "slots" in preview ? (
+        {preview && "slots" in preview && preview.slots ? (
           preview.slots.length === 0 ? (
             <div className="empty">No bookable slots for that date.</div>
           ) : (

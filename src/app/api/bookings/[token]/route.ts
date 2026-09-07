@@ -32,10 +32,10 @@ export async function DELETE(_request: Request, context: RouteContext) {
   const { token } = await context.params;
   const result = await cancelAppointmentByToken(token);
 
-  if (result.error) {
+  if (result.error || !result.appointment) {
     return NextResponse.json(
-      { error: result.error },
-      { status: result.status },
+      { error: result.error ?? "Not found." },
+      { status: result.status ?? 404 },
     );
   }
 

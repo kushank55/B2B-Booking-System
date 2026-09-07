@@ -13,10 +13,10 @@ export async function POST(request: Request) {
     customerPhone: body.customerPhone ? String(body.customerPhone) : undefined,
   });
 
-  if (result.error) {
+  if (result.error || !result.appointment) {
     return NextResponse.json(
-      { error: result.error },
-      { status: result.status },
+      { error: result.error ?? "Could not create booking." },
+      { status: result.status ?? 400 },
     );
   }
 

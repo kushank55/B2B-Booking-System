@@ -34,8 +34,8 @@ export async function onboardBusiness(
     adminPassword: String(formData.get("adminPassword") ?? ""),
   });
 
-  if (created.error) {
-    return { error: created.error };
+  if (created.error || !created.business) {
+    return { error: created.error ?? "Could not create the business." };
   }
 
   redirect(`/owner/businesses/${created.business.id}`);

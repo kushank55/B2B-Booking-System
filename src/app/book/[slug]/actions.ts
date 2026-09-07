@@ -19,8 +19,8 @@ export async function submitBooking(
     customerPhone: String(formData.get("customerPhone") ?? "") || undefined,
   });
 
-  if (result.error) {
-    return { error: result.error };
+  if (result.error || !result.appointment) {
+    return { error: result.error ?? "Could not create booking." };
   }
 
   redirect(`/bookings/${result.appointment.manageToken}?confirmed=1`);
