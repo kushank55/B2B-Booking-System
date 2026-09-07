@@ -17,11 +17,18 @@ export default async function OwnerLayout({
   return (
     <div className="app">
       <header className="topbar">
-        <Link href="/owner">System Owner</Link>
+        <div className="topbar-start">
+          <Link className="brand" href="/owner">
+            Booking
+          </Link>
+          <span className="topbar-tenant">System Owner</span>
+        </div>
         <div className="topbar-meta">
           <span className="muted">{session.user.email}</span>
           <form action={logout}>
-            <button type="submit">Sign out</button>
+            <button type="submit" className="button-secondary">
+              Sign out
+            </button>
           </form>
         </div>
       </header>

@@ -17,8 +17,9 @@ export default async function OwnerPage() {
       </div>
 
       {businesses.length === 0 ? (
-        <p className="muted">No businesses yet.</p>
+        <div className="empty">No businesses yet. Onboard the first customer.</div>
       ) : (
+        <div className="table-wrap">
         <table className="table">
           <thead>
             <tr>
@@ -51,6 +52,7 @@ export default async function OwnerPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </main>
   );

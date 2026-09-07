@@ -48,22 +48,24 @@ export default async function HoursPage({
   return (
     <main className="content">
       <h1>Availability</h1>
-      <p className="muted">
+      <p className="muted lede">
         Weekly hours in {result.business.timezone}. Slots are derived from these
         hours, the service duration, and appointments that are not cancelled.
       </p>
 
       <form className="card hours-scope" method="get">
-        <label htmlFor="staffId">Hours for</label>
-        <select id="staffId" name="staffId" defaultValue={selectedStaffId}>
-          <option value="">All staff</option>
-          {staff.map((person) => (
-            <option key={person.id} value={person.id}>
-              {person.name}
-              {person.status === "INACTIVE" ? " (inactive)" : ""}
-            </option>
-          ))}
-        </select>
+        <div className="field">
+          <label htmlFor="staffId">Hours for</label>
+          <select id="staffId" name="staffId" defaultValue={selectedStaffId}>
+            <option value="">All staff</option>
+            {staff.map((person) => (
+              <option key={person.id} value={person.id}>
+                {person.name}
+                {person.status === "INACTIVE" ? " (inactive)" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
         <button type="submit">Load</button>
       </form>
 
@@ -73,28 +75,32 @@ export default async function HoursPage({
         <h2>Preview slots</h2>
         <form className="hours-preview" method="get">
           <input type="hidden" name="staffId" value={selectedStaffId} />
-          <label htmlFor="serviceId">Service</label>
-          <select
-            id="serviceId"
-            name="serviceId"
-            defaultValue={previewServiceId}
-          >
-            {services
-              .filter((service) => service.status === "ACTIVE")
-              .map((service) => (
-                <option key={service.id} value={service.id}>
-                  {service.name} ({service.durationMinutes} min)
-                </option>
-              ))}
-          </select>
-          <label htmlFor="date">Date</label>
-          <input
-            id="date"
-            name="date"
-            type="date"
-            defaultValue={previewDate}
-            required
-          />
+          <div className="field">
+            <label htmlFor="serviceId">Service</label>
+            <select
+              id="serviceId"
+              name="serviceId"
+              defaultValue={previewServiceId}
+            >
+              {services
+                .filter((service) => service.status === "ACTIVE")
+                .map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name} ({service.durationMinutes} min)
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="date">Date</label>
+            <input
+              id="date"
+              name="date"
+              type="date"
+              defaultValue={previewDate}
+              required
+            />
+          </div>
           <button type="submit">Show slots</button>
         </form>
 
@@ -104,7 +110,7 @@ export default async function HoursPage({
 
         {preview && "slots" in preview ? (
           preview.slots.length === 0 ? (
-            <p className="muted">No bookable slots for that date.</p>
+            <div className="empty">No bookable slots for that date.</div>
           ) : (
             <p>
               {preview.slots.map((slot) => slot.localTime).join(" · ")}

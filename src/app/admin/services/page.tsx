@@ -24,8 +24,9 @@ export default async function ServicesPage() {
       </div>
 
       {services.length === 0 ? (
-        <p className="muted">No services yet.</p>
+        <div className="empty">No services yet. Add one to start taking bookings.</div>
       ) : (
+        <div className="table-wrap">
         <table className="table">
           <thead>
             <tr>
@@ -54,6 +55,7 @@ export default async function ServicesPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </main>
   );

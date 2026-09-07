@@ -1,3 +1,4 @@
+import { PublicFrame } from "@/components/public-frame";
 import { LoginForm } from "./login-form";
 
 export default async function LoginPage({
@@ -14,12 +15,12 @@ export default async function LoginPage({
         : undefined;
 
   return (
-    <main className="page">
-      <div className="shell">
+    <PublicFrame>
+      <main className="content content-narrow">
         <h1>Sign in</h1>
-        <p className="muted">System Owner and Business Admin only.</p>
+        <p className="muted lede">System Owner and Business Admin only.</p>
         <LoginForm urlError={urlError} />
-      </div>
-    </main>
+      </main>
+    </PublicFrame>
   );
 }

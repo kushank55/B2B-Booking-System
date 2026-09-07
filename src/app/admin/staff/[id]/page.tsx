@@ -22,9 +22,9 @@ export default async function EditStaffPage({
 
   return (
     <main className="content content-narrow">
-      <p>
-        <Link href="/admin/staff">Back to staff</Link>
-      </p>
+      <Link className="back-link" href="/admin/staff">
+        Back to staff
+      </Link>
       <h1>Edit staff</h1>
       <StaffForm
         staff={{

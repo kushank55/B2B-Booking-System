@@ -21,17 +21,25 @@ export default async function AdminLayout({
   return (
     <div className="app">
       <header className="topbar">
-        <div className="topbar-nav">
-          <Link href="/admin">{result.business.name}</Link>
+        <div className="topbar-start">
+          <Link className="brand" href="/admin">
+            Booking
+          </Link>
+          <span className="topbar-tenant">{result.business.name}</span>
+        </div>
+        <nav className="topbar-nav">
           <Link href="/admin">Profile</Link>
           <Link href="/admin/services">Services</Link>
           <Link href="/admin/staff">Staff</Link>
           <Link href="/admin/hours">Hours</Link>
-        </div>
+          <Link href="/admin/appointments">Appointments</Link>
+        </nav>
         <div className="topbar-meta">
           <span className="muted">{result.user.email}</span>
           <form action={logout}>
-            <button type="submit">Sign out</button>
+            <button type="submit" className="button-secondary">
+              Sign out
+            </button>
           </form>
         </div>
       </header>

@@ -22,9 +22,9 @@ export default async function EditServicePage({
 
   return (
     <main className="content content-narrow">
-      <p>
-        <Link href="/admin/services">Back to services</Link>
-      </p>
+      <Link className="back-link" href="/admin/services">
+        Back to services
+      </Link>
       <h1>Edit service</h1>
       <ServiceForm
         service={{

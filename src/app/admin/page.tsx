@@ -11,7 +11,7 @@ export default async function AdminPage() {
   return (
     <main className="content content-narrow">
       <h1>Business profile</h1>
-      <p className="muted">
+      <p className="muted lede">
         These details belong to /{result.business.slug}. Status is controlled by
         the System Owner.
       </p>

@@ -11,24 +11,28 @@ export function LoginForm({ urlError }: { urlError?: string }) {
   const error = state?.error ?? urlError;
 
   return (
-    <form action={action} className="card">
-      <label htmlFor="email">Email</label>
-      <input
-        id="email"
-        name="email"
-        type="email"
-        autoComplete="email"
-        required
-      />
+    <form action={action} className="card form-grid">
+      <div className="field">
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+      </div>
 
-      <label htmlFor="password">Password</label>
-      <input
-        id="password"
-        name="password"
-        type="password"
-        autoComplete="current-password"
-        required
-      />
+      <div className="field">
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          required
+        />
+      </div>
 
       {error ? <p className="error">{error}</p> : null}
 

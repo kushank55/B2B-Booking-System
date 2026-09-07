@@ -4,9 +4,9 @@ import { ServiceForm } from "../../service-form";
 export default function NewServicePage() {
   return (
     <main className="content content-narrow">
-      <p>
-        <Link href="/admin/services">Back to services</Link>
-      </p>
+      <Link className="back-link" href="/admin/services">
+        Back to services
+      </Link>
       <h1>Add service</h1>
       <ServiceForm />
     </main>

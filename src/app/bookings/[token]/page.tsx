@@ -1,3 +1,4 @@
+import { PublicFrame } from "@/components/public-frame";
 import { getAppointmentByToken } from "@/server/bookings/create";
 import { formatDateTimeInZone } from "@/server/bookings/time";
 import { cancelBooking } from "./actions";
@@ -26,46 +27,64 @@ export default async function ManageBookingPage({
     appointment.status === "CONFIRMED" && appointment.startAt > new Date();
 
   return (
-    <main className="content content-narrow">
-      <h1>
-        {query.confirmed ? "Booking confirmed" : "Your appointment"}
-      </h1>
-      <p className="muted">
-        Keep this page or save the link. It is how you view or cancel this
-        booking.
-      </p>
-
-      {query.error ? <p className="error">{query.error}</p> : null}
-
-      <section className="card stack">
-        <p>
-          <strong>{appointment.business.name}</strong>
+    <PublicFrame>
+      <main className="content content-narrow">
+        <h1>
+          {query.confirmed ? "Booking confirmed" : "Your appointment"}
+        </h1>
+        <p className="muted lede">
+          Keep this page or save the link. It is how you view or cancel this
+          booking.
         </p>
-        <p>{appointment.service.name}</p>
-        <p>{when}</p>
-        <p className="muted">with {appointment.staff.name}</p>
-        <p>
-          {appointment.customerName} · {appointment.customerEmail}
-          {appointment.customerPhone ? ` · ${appointment.customerPhone}` : ""}
-        </p>
-        <p>
-          <span className={`badge badge-${appointment.status.toLowerCase()}`}>
-            {appointment.status}
-          </span>
-        </p>
-      </section>
 
-      {canCancel ? (
-        <form action={cancelBooking} className="card stack">
-          <input type="hidden" name="token" value={token} />
-          <p className="muted">
-            Cancelling frees this time for someone else.
+        {query.confirmed ? (
+          <p className="notice notice-ok">Your appointment is confirmed.</p>
+        ) : null}
+        {query.error ? <p className="error">{query.error}</p> : null}
+
+        <section className="card stack">
+          <div className="detail-row">
+            <strong>Business</strong>
+            <p>{appointment.business.name}</p>
+          </div>
+          <div className="detail-row">
+            <strong>Service</strong>
+            <p>{appointment.service.name}</p>
+          </div>
+          <div className="detail-row">
+            <strong>When</strong>
+            <p>{when}</p>
+          </div>
+          <div className="detail-row">
+            <strong>Staff</strong>
+            <p>{appointment.staff.name}</p>
+          </div>
+          <div className="detail-row">
+            <strong>Customer</strong>
+            <p>
+              {appointment.customerName} · {appointment.customerEmail}
+              {appointment.customerPhone ? ` · ${appointment.customerPhone}` : ""}
+            </p>
+          </div>
+          <p>
+            <span className={`badge badge-${appointment.status.toLowerCase()}`}>
+              {appointment.status}
+            </span>
           </p>
-          <button type="submit" className="button-danger">
-            Cancel appointment
-          </button>
-        </form>
-      ) : null}
-    </main>
+        </section>
+
+        {canCancel ? (
+          <form action={cancelBooking} className="card stack">
+            <input type="hidden" name="token" value={token} />
+            <p className="muted">
+              Cancelling frees this time for someone else.
+            </p>
+            <button type="submit" className="button-danger">
+              Cancel appointment
+            </button>
+          </form>
+        ) : null}
+      </main>
+    </PublicFrame>
   );
 }

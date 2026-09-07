@@ -74,24 +74,26 @@ export function BookingForm({
       <input type="hidden" name="slug" value={slug} />
       <input type="hidden" name="startAt" value={startAt} />
 
-      <label htmlFor="serviceId">Service</label>
-      <select
-        id="serviceId"
-        name="serviceId"
-        value={serviceId}
-        onChange={(event) => setServiceId(event.target.value)}
-        required
-      >
-        {services.map((service) => (
-          <option key={service.id} value={service.id}>
-            {service.name}
-            {service.durationMinutes ? ` (${service.durationMinutes} min)` : ""}
-          </option>
-        ))}
-      </select>
+      <div className="field">
+        <label htmlFor="serviceId">Service</label>
+        <select
+          id="serviceId"
+          name="serviceId"
+          value={serviceId}
+          onChange={(event) => setServiceId(event.target.value)}
+          required
+        >
+          {services.map((service) => (
+            <option key={service.id} value={service.id}>
+              {service.name}
+              {service.durationMinutes ? ` (${service.durationMinutes} min)` : ""}
+            </option>
+          ))}
+        </select>
+      </div>
 
       {staff.length > 1 ? (
-        <>
+        <div className="field">
           <label htmlFor="staffId">Staff</label>
           <select
             id="staffId"
@@ -106,28 +108,35 @@ export function BookingForm({
               </option>
             ))}
           </select>
-        </>
+        </div>
       ) : (
         <input type="hidden" name="staffId" value={staffId} />
       )}
 
-      <label htmlFor="date">Date</label>
-      <input
-        id="date"
-        type="date"
-        min={minDate}
-        value={date}
-        onChange={(event) => setDate(event.target.value)}
-        required
-      />
+      <div className="field">
+        <label htmlFor="date">Date</label>
+        <input
+          id="date"
+          type="date"
+          min={minDate}
+          value={date}
+          onChange={(event) => setDate(event.target.value)}
+          required
+        />
+      </div>
       <p className="muted">Times are shown in {timezone}.</p>
 
-      <p>Available times</p>
-      {loadingSlots ? <p className="muted">Loading slots…</p> : null}
-      {slotsError ? <p className="error">{slotsError}</p> : null}
-      {!loadingSlots && date && slots.length === 0 && !slotsError ? (
-        <p className="muted">No times available on that date.</p>
-      ) : null}
+      <div className="stack">
+        <p>Available times</p>
+        {loadingSlots ? <p className="muted">Loading slots…</p> : null}
+        {slotsError ? <p className="error">{slotsError}</p> : null}
+        {!loadingSlots && !date ? (
+          <div className="empty">Pick a date to see open times.</div>
+        ) : null}
+        {!loadingSlots && date && slots.length === 0 && !slotsError ? (
+          <div className="empty">No times available on that date.</div>
+        ) : null}
+      </div>
       <div className="slots">
         {slots.map((slot) => (
           <button
@@ -147,14 +156,20 @@ export function BookingForm({
         </p>
       ) : null}
 
-      <label htmlFor="customerName">Your name</label>
-      <input id="customerName" name="customerName" required />
+      <div className="field">
+        <label htmlFor="customerName">Your name</label>
+        <input id="customerName" name="customerName" required />
+      </div>
 
-      <label htmlFor="customerEmail">Email</label>
-      <input id="customerEmail" name="customerEmail" type="email" required />
+      <div className="field">
+        <label htmlFor="customerEmail">Email</label>
+        <input id="customerEmail" name="customerEmail" type="email" required />
+      </div>
 
-      <label htmlFor="customerPhone">Phone (optional)</label>
-      <input id="customerPhone" name="customerPhone" />
+      <div className="field">
+        <label htmlFor="customerPhone">Phone (optional)</label>
+        <input id="customerPhone" name="customerPhone" />
+      </div>
 
       {state?.error ? <p className="error">{state.error}</p> : null}
 

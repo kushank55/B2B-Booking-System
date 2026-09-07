@@ -17,8 +17,8 @@ export default async function StaffPage() {
         <div>
           <h1>Staff</h1>
           <p className="muted">
-            Bookable people for this business. Overlaps are checked per staff
-            later.
+            Bookable people for this business. The same staff cannot have
+            overlapping appointments.
           </p>
         </div>
         <Link className="button-link" href="/admin/staff/new">
@@ -27,8 +27,9 @@ export default async function StaffPage() {
       </div>
 
       {staff.length === 0 ? (
-        <p className="muted">No staff yet.</p>
+        <div className="empty">No staff yet. Add someone customers can book.</div>
       ) : (
+        <div className="table-wrap">
         <table className="table">
           <thead>
             <tr>
@@ -53,6 +54,7 @@ export default async function StaffPage() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </main>
   );

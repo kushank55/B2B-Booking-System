@@ -26,6 +26,7 @@ export function HoursForm({
 
   return (
     <form action={action} className="card">
+      <h2>Weekly hours</h2>
       <input type="hidden" name="staffId" value={staffId} />
 
       {WEEK_DAYS.map((day) => {

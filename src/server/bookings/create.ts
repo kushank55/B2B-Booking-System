@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { getSlotsForSlug } from "@/server/bookings/availability";
+import { findOverlappingAppointment } from "@/server/bookings/conflicts";
 import { dateInZone } from "@/server/bookings/time";
 import { getActiveBusinessBySlug } from "@/server/tenants/active";
 
@@ -69,44 +70,52 @@ export async function createBooking(input: CreateBookingInput) {
   const endAt = new Date(chosen.endAt);
 
   try {
-    const appointment = await prisma.$transaction(async (tx) => {
-      const overlap = await tx.appointment.findFirst({
-        where: {
-          staffId: input.staffId,
-          status: { not: "CANCELLED" },
-          startAt: { lt: endAt },
-          endAt: { gt: startAt },
-        },
-      });
-
-      if (overlap) {
-        throw new Error("CONFLICT");
-      }
-
-      return tx.appointment.create({
-        data: {
-          businessId: business.id,
-          serviceId: input.serviceId,
-          staffId: input.staffId,
-          customerName: input.customerName.trim(),
-          customerEmail: input.customerEmail.trim().toLowerCase(),
-          customerPhone: input.customerPhone?.trim() || null,
+    const appointment = await prisma.$transaction(
+      async (tx) => {
+        const overlap = await findOverlappingAppointment(
+          tx,
+          input.staffId,
           startAt,
           endAt,
-          status: "CONFIRMED",
-          manageToken: randomBytes(24).toString("hex"),
-        },
-        include: {
-          service: true,
-          staff: true,
-          business: true,
-        },
-      });
-    });
+        );
+
+        if (overlap) {
+          throw new Error("CONFLICT");
+        }
+
+        return tx.appointment.create({
+          data: {
+            businessId: business.id,
+            serviceId: input.serviceId,
+            staffId: input.staffId,
+            customerName: input.customerName.trim(),
+            customerEmail: input.customerEmail.trim().toLowerCase(),
+            customerPhone: input.customerPhone?.trim() || null,
+            startAt,
+            endAt,
+            status: "CONFIRMED",
+            manageToken: randomBytes(24).toString("hex"),
+          },
+          include: {
+            service: true,
+            staff: true,
+            business: true,
+          },
+        });
+      },
+      { isolationLevel: "Serializable" },
+    );
 
     return { appointment };
   } catch (cause) {
-    if (cause instanceof Error && cause.message === "CONFLICT") {
+    const code =
+      cause && typeof cause === "object" && "code" in cause
+        ? String(cause.code)
+        : "";
+    if (
+      (cause instanceof Error && cause.message === "CONFLICT") ||
+      code === "P2034"
+    ) {
       return {
         error: "That time was just booked. Choose another slot.",
         status: 409,
